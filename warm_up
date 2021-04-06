@@ -1,0 +1,107 @@
+#include <vector>
+using std::vector;
+#include <iostream>
+//using std::cout;
+using namespace std;
+
+/*a function that applies rules to the glider configuration one time*/
+
+void gliderProcess(vector<vector<bool>> original,vector<vector<bool>> &newgen);
+/*int numberAlive(vector<vector<bool>> original);//count number of neighbors alive*/
+void toSymbols(vector<vector<bool>> Printed);//decode 0 and 1
+
+const char alive='O'; //cell alive
+const char dead='.';//cell dead
+//vector<vector<bool>> newgen;
+vector<vector<bool> > world = {
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
+};
+
+int main(int argc, char *argv[])
+//argc stands for "argument count" and argv stands for "argument values", which is similar to vector.
+{
+	vector<vector<bool>> future(world);
+	//vector<vector<bool>> future(world); /* make future a copy of world. */
+	/* NOTE: the vector 'world' above corresponds to the contents
+	 * of ../res/tests/0.  TODO: apply the rules to the vector,
+	 * write the result to standard output, and compare with the
+	 * contents of ../tests/1. */
+
+	int n=0;
+	if (argc!=2)
+	{
+		toSymbols(world);
+		exit(0);
+		}
+	else
+		n=atoi(argv[1]);//atoi change the datatype of the secod argument
+	for (int i=0;i<n; i++)
+	{
+		gliderProcess(world,future);
+		world=future;
+	}
+	//gliderProcess(world,future);
+	toSymbols(future);
+	return 0;
+}
+
+
+/*-------------functions----------*/
+//mod operator is used for form a torus: 10 rows and 20 columns
+void gliderProcess(vector<vector<bool>> original,vector<vector<bool>>  &newgen)
+{
+		for (int a=0;a<10;a++){
+			for (int b=0;b<20;b++){
+				int count=0;//count of neighbor cells alive
+				for (int c=-1;c<=1;c++){
+					for (int d=-1;d<=1;d++){
+						if (!(c==0 && d==0)){//do not consider cell itself
+							if(original[(a+c+10)%10][(b+d+20)%20])
+								count=count+1;}}}
+				if (count<2 || count>3)
+					newgen[a][b]=0;
+				else if (count==3)
+					newgen[a][b]=1;
+				else
+					newgen[a][b]=original[a][b];
+				}}
+
+}
+
+/*int numberAlive(vector<vector<bool>> original){
+	int count=0;//count of neighbor cells alive
+	for (int a=0;a<10;a++){
+		for (int b=0;b<20;b++){
+			for (int c=-1;c<=1;c++){
+				for (int d=-1;d<=1;c++){
+					if (!(c==0 && d==0)){//do not consider cell itself
+						if(original[(a+c+10)%10][(b+d+20)%20])
+								count=count+1;}}}
+			}}
+	return count;
+
+	}*/
+
+
+
+void toSymbols(vector<vector<bool>> Printed){
+	for(unsigned int a=0;a<10;a++)
+	{
+		for (unsigned int b=0;b<20;b++)
+		{
+			if (Printed[a][b])
+				cout<<alive;
+			else
+				cout<<dead;
+				}
+		cout<<"\n";}
+				}
